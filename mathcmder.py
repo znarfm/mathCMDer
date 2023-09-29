@@ -78,7 +78,14 @@ def parse_args():
         default=-1,
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.lowest > args.highest:
+        parser.error(
+            "lowest operand cannot be greater than highest operand"
+        )
+
+    return args
 
 
 def generate(operation: str, lowest: int, highest: int) -> str:
@@ -165,7 +172,9 @@ def run_quiz(args: object) -> tuple:
 
         # Catch error in case user inputs something other than a number
         try:
-            if not timed_out and correct == int(ans):
+            if timed_out:
+                print("Timed out! ❌")
+            elif correct == int(ans):
                 score += 1
                 print("Correct! ✅")
             else:
