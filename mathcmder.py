@@ -42,7 +42,18 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="This is a project by Meinard for CS50P",
     )
-    parser.add_argument(
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=True
+    )
+
+    # Sub parser: start
+    start_parser = subparsers.add_parser(
+        "start",
+        help="start the quiz",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    start_parser.add_argument(
         "-c",
         "--count",
         metavar="NUMBER_OF_QUESTIONS",
@@ -50,7 +61,7 @@ def parse_args():
         type=int,
         required=True,
     )
-    parser.add_argument(
+    start_parser.add_argument(
         "-o",
         "--operation",
         help="enter which operation you want to quiz",
@@ -58,14 +69,14 @@ def parse_args():
         choices=["+", "-", "*", "/"],
         required=True,
     )
-    parser.add_argument(
+    start_parser.add_argument(
         "-l", 
         "--lowest", 
         help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)", 
         type=int, 
         default=1
     )
-    parser.add_argument(
+    start_parser.add_argument(
         "-m",
         "--max",
         help="enter the highest operand value (note: for division problems, this will be the highest possible divisor)",
@@ -73,7 +84,7 @@ def parse_args():
         type=int,
         default=10,
     )
-    parser.add_argument(
+    start_parser.add_argument(
         "-t",
         "--timer",
         metavar="SECONDS",
@@ -82,6 +93,12 @@ def parse_args():
         default=-1,
     )
 
+    subparsers.add_parser(
+        "show-scores",
+        help="show scores",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    
     args = parser.parse_args()
 
     if args.lowest > args.highest:
