@@ -6,6 +6,8 @@
 
 MathCMDer is a command-line interface (CLI) math quiz application written in Python. It allows users to test their math skills by answering a series of arithmetic questions.
 
+This is a project for [CS50P](https://cs50.harvard.edu/python/).
+
 ### Features
 
 - Customizable number of questions
@@ -38,7 +40,7 @@ pip install -r requirements.txt
 To start the math quiz, run the following command:
 
 ```bash
-python project.py -c <number_of_questions> -o <operation> -l <lowest_value> -m <highest_value> -t <timeout>
+python mathcmder.py -c <number_of_questions> -o <operation> -l <lowest_value> -m <highest_value> -t <timeout>
 ```
 
 Replace the placeholders with the desired values:
@@ -52,19 +54,21 @@ Replace the placeholders with the desired values:
 Example usage:
 
 ```bash
-python project.py --count 10 --operation + --lowest 1 --max 10 --timer 5
+python mathcmder.py --count 10 --operation + --lowest 1 --max 10 --timer 5
 ```
 
 ```bash
-python project.py -c10 -o+ -l1 -m10 -t5
+python mathcmder.py -c10 -o+ -l1 -m10 -t5
 ```
 
 Both are essentially the same. These will start a math quiz with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question.
 
 ## Contributing
-Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or PR on the [GitHub repository](https://github.com/znarfm/mathCMDer.git)
+
+Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or PR on the [GitHub repository](https://github.com/znarfm/mathCMDer.git).
 
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/znarfm/mathCMDer/blob/main/LICENSE) file for more information.
 
 ---
