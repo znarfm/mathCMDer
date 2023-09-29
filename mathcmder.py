@@ -55,16 +55,20 @@ def parse_args():
         "--operation",
         help="enter which operation you want to quiz",
         type=str,
-        choices=["+", "-", "*"],
+        choices=["+", "-", "*", "/"],
         required=True,
     )
     parser.add_argument(
-        "-l", "--lowest", help="enter the lowest operand value", type=int, default=1
+        "-l", 
+        "--lowest", 
+        help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)", 
+        type=int, 
+        default=1
     )
     parser.add_argument(
         "-m",
         "--max",
-        help="enter the highest operand value",
+        help="enter the highest operand value (note: for division problems, this will be the highest possible divisor)",
         dest="highest",
         type=int,
         default=10,
@@ -88,12 +92,12 @@ def parse_args():
     return args
 
 
-def generate(operation: str, lowest: int, highest: int) -> str:
+def generate(operation: list, lowest: int, highest: int) -> str:
     """
     Generate a random arithmetic expression.
 
     Parameters:
-        operation (str): The arithmetic operation to be performed.
+        operation (list): The arithmetic operation to be performed.
         lowest (int): The lowest possible value for the operands.
         highest (int): The highest possible value for the operands.
 
@@ -101,10 +105,18 @@ def generate(operation: str, lowest: int, highest: int) -> str:
         str: The arithmetic expression as a string.
 
     """
-    num1 = randint(lowest, highest)
-    num2 = randint(lowest, highest)
-
-    return f"{num1} {operation} {num2}"
+    if operation == "/":
+        # To avoid division by zero
+        while lowest == 0:
+            lowest = randint(1, highest)
+        divisor = randint(lowest, highest)
+        quotient = randint(lowest, highest)
+        dividend = divisor * quotient
+        return f"{dividend} {operation} {divisor}"
+    else:
+        num1 = randint(lowest, highest)
+        num2 = randint(lowest, highest)
+        return f"{num1} {operation} {num2}"
 
 
 def calculate(question: str) -> int:
@@ -143,6 +155,8 @@ def calculate(question: str) -> int:
         return num1 - num2
     elif operation == "*":
         return num1 * num2
+    elif operation == "/":
+        return num1 // num2
     else:
         raise ValueError("Unsupported operation")
 
