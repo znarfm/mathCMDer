@@ -92,12 +92,12 @@ def parse_args():
     return args
 
 
-def generate(operation: list, lowest: int, highest: int) -> str:
+def generate(operation: str, lowest: int, highest: int) -> str:
     """
     Generate a random arithmetic expression.
 
     Parameters:
-        operation (list): The arithmetic operation to be performed.
+        operation (str): The arithmetic operation to be performed.
         lowest (int): The lowest possible value for the operands.
         highest (int): The highest possible value for the operands.
 
@@ -105,17 +105,16 @@ def generate(operation: list, lowest: int, highest: int) -> str:
         str: The arithmetic expression as a string.
 
     """
+    # To avoid division by zero
+    if lowest == 0:
+        lowest = randint(1, highest)
+    
+    num1 = randint(lowest, highest)
+    num2 = randint(lowest, highest)
+    
     if operation == "/":
-        # To avoid division by zero
-        while lowest == 0:
-            lowest = randint(1, highest)
-        divisor = randint(lowest, highest)
-        quotient = randint(lowest, highest)
-        dividend = divisor * quotient
-        return f"{dividend} {operation} {divisor}"
+        return f"{num1 * num2} {operation} {num1}"
     else:
-        num1 = randint(lowest, highest)
-        num2 = randint(lowest, highest)
         return f"{num1} {operation} {num2}"
 
 
