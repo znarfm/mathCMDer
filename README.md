@@ -57,6 +57,8 @@ Replace the placeholders with the desired values:
 
 Example usage:
 
+Both are essentially the same. These will start a math quiz with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question. Since there is no `--name` flag given, the default name in the leaderboard will appear as `Anonymous`.
+
 ```bash
 python mathcmder.py start --count 10 --operation + --lowest 1 --max 10 --timer 5
 ```
@@ -65,7 +67,11 @@ python mathcmder.py start --count 10 --operation + --lowest 1 --max 10 --timer 5
 python mathcmder.py start -c10 -o+ -l1 -m10 -t5
 ```
 
-Both are essentially the same. These will start a math quiz with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question.
+This will start the program with 15 division questions, using the default operand values without a timeout, and the name `Juan` will appear in the leaderboard.
+
+```bash
+python mathcmder.py start -c15 -o/ -n "Juan"
+```
 
 To view the leaderboard values, use the `leaderboard` command:
 
@@ -76,6 +82,8 @@ python mathcmder.py leaderboard
 ## To-do
 
 - [ ] Improve leaderboard (add sorting flags/arguments)
+- [ ] Add flag to opt out in leaderboards
+- [ ] Convert to object-oriented
 
 ## Contributing
 
