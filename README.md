@@ -11,11 +11,14 @@ This is a project for [CS50P](https://cs50.harvard.edu/python/).
 ### Features
 
 - Customizable number of questions
-- Choose from addition, subtraction, or multiplication operations
+- Choose from addition, subtraction, multiplication, or division operations
 - Set a range of operand values
 - Optional timer for each question
+- Local leaderboard
 
 ### Installation
+
+Make sure you have Python 3.6 or higher installed to run this program.
 
 1. Clone the repository
 
@@ -40,7 +43,7 @@ pip install -r requirements.txt
 To start the math quiz, run the following command:
 
 ```bash
-python mathcmder.py -c <number_of_questions> -o <operation> -l <lowest_value> -m <highest_value> -t <timeout>
+python mathcmder.py start -c <number_of_questions> -o <operation> -l <lowest_value> -m <highest_value> -t <timeout> -n <name>
 ```
 
 Replace the placeholders with the desired values:
@@ -50,18 +53,29 @@ Replace the placeholders with the desired values:
 - `<lowest_value>` (defaults to `1`): The lowest possible value for the operands.
 - `<highest_value>` (defaults to `10`): The highest possible value for the operands.
 - `<timeout>`: Set a timeout (in seconds) for each question. If not specified, there will be no timeout.
+- `<name>` (defaults to `Anonymous`): Name to be saved in the leaderboard.
 
 Example usage:
 
 ```bash
-python mathcmder.py --count 10 --operation + --lowest 1 --max 10 --timer 5
+python mathcmder.py start --count 10 --operation + --lowest 1 --max 10 --timer 5
 ```
 
 ```bash
-python mathcmder.py -c10 -o+ -l1 -m10 -t5
+python mathcmder.py start -c10 -o+ -l1 -m10 -t5
 ```
 
 Both are essentially the same. These will start a math quiz with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question.
+
+To view the leaderboard values, use the `leaderboard` command:
+
+```bash
+python mathcmder.py leaderboard
+```
+
+## To-do
+
+- [ ] Improve leaderboard (add sorting flags/arguments)
 
 ## Contributing
 
