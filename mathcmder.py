@@ -1,7 +1,9 @@
 import argparse
 import time
+import csv
 from random import randint
 from pytimedinput import timedInput
+from tabulate import tabulate
 
 
 def main():
@@ -20,11 +22,14 @@ def main():
     # Parse arguments
     args = parse_args()
 
-    # Start the quiz
-    score, total_time, time_list = run_quiz(args)
-
-    # End the quiz
-    endgame(score, total_time, args.count, time_list)
+    if args.command == "start":
+        # Start the quiz
+        score, total_time, time_list = run_quiz(args)
+        # End the quiz
+        endgame(args.name, score, total_time, args.count, time_list)
+    elif args.command == "leaderboard":
+        # Show the leaderboard
+        read_leaderboard()
 
 
 def parse_args():
@@ -52,6 +57,14 @@ def parse_args():
         "start",
         help="start the quiz",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    start_parser.add_argument(
+        "-n",
+        "--name",
+        metavar="NAME",
+        help="enter your name",
+        type=str,
+        default="Anonymous",
     )
     start_parser.add_argument(
         "-c",
@@ -93,15 +106,16 @@ def parse_args():
         default=-1,
     )
 
+    # Sub parser: show scores
     subparsers.add_parser(
-        "show-scores",
-        help="show scores",
+        "leaderboard",
+        help="prints out the leaderboard",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     
     args = parser.parse_args()
 
-    if args.lowest > args.highest:
+    if args.command == "start" and args.lowest > args.highest:
         parser.error(
             "lowest operand cannot be greater than highest operand"
         )
@@ -220,26 +234,42 @@ def run_quiz(args: object) -> tuple:
 
     return score, total_time, time_list
 
+def save_score(name: str, score: int, total_time: float, ave: float) -> None:
+    fieldnames = ["Name", "Score", "Time", "Avg. Time/Question"]
+    filename = "leaderboard.csv"
 
-def endgame(score: int, total_time: float, count: int, time_list: list) -> None:
-    """
-    Print the endgame summary including the player's score, the total time taken, the number of questions answered, and the average time per question.
+    write_header = False
+    try:
+        with open(filename, "r") as f:
+            if f.read().isspace():
+                write_header = True
+    except FileNotFoundError:
+        write_header = True
 
-    Parameters:
-    - score (int): The player's score in the quiz.
-    - total_time (float): The total time taken by the player to complete the quiz.
-    - count (int): The number of questions answered by the player.
-    - time_list (list): A list of the time taken for each question.
+    with open(filename, "a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerow({"Name": name, "Score": score, "Time": "{:.02f}".format(total_time), "Avg. Time/Question": "{:.02f}".format(ave)})
 
-    Returns:
-    - None: This function does not return any value.
-    """
+def endgame(name: str, score: int, total_time: float, count: int, time_list: list) -> None:
     print("\nQuiz finished!")
     print(f"Your score is {score} out of {count}")
     print(f"You finished in {total_time:.02f}s")
-    print(f"Average time per question: {sum(time_list) / count:.02f}s")
-    raise SystemExit("This is CS50P!")
+    ave = sum(time_list) / count
+    print(f"Average time per question: {ave:.02f}s")
+    save_score(name, score, total_time, ave)
+    raise SystemExit("This was CS50P!")
 
-
+def read_leaderboard():
+    filename = "leaderboard.csv"
+    try:
+        with open(filename, "r") as f:
+            reader = csv.reader(f)
+            headers = next(reader)
+            data = list(reader)
+            print(tabulate(data, headers, tablefmt='fancy_grid'))
+    except FileNotFoundError:
+        print(f"{filename} not found.")
 if __name__ == "__main__":
     main()
