@@ -234,8 +234,8 @@ def run_quiz(args: object) -> tuple:
 
     return score, total_time, time_list
 
-def save_score(name: str, score: int, total_time: float, ave: float) -> None:
-    fieldnames = ["Name", "Score", "Time", "Avg. Time/Question"]
+def save_score(name: str, score: int, total_time: float, count: int, ave: float) -> None:
+    fieldnames = ["Name", "Score", "Time", "Question Count", "Avg. Time/Question"]
     filename = "leaderboard.csv"
 
     write_header = False
@@ -250,7 +250,7 @@ def save_score(name: str, score: int, total_time: float, ave: float) -> None:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         if write_header:
             writer.writeheader()
-        writer.writerow({"Name": name, "Score": score, "Time": "{:.02f}".format(total_time), "Avg. Time/Question": "{:.02f}".format(ave)})
+        writer.writerow({"Name": name, "Score": score, "Time": "{:.02f}".format(total_time), "Question Count": count, "Avg. Time/Question": "{:.02f}".format(ave)})
 
 def endgame(name: str, score: int, total_time: float, count: int, time_list: list) -> None:
     print("\nQuiz finished!")
@@ -258,7 +258,7 @@ def endgame(name: str, score: int, total_time: float, count: int, time_list: lis
     print(f"You finished in {total_time:.02f}s")
     ave = sum(time_list) / count
     print(f"Average time per question: {ave:.02f}s")
-    save_score(name, score, total_time, ave)
+    save_score(name, score, total_time, count, ave)
     raise SystemExit("This was CS50P!")
 
 def read_leaderboard():
@@ -271,5 +271,6 @@ def read_leaderboard():
             print(tabulate(data, headers, tablefmt='fancy_grid'))
     except FileNotFoundError:
         print(f"{filename} not found.")
+
 if __name__ == "__main__":
     main()
