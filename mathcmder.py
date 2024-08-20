@@ -292,15 +292,14 @@ def endgame(name: str, score: int, total_time: float, count: int, time_list: lis
 def read_leaderboard():
     """
     Reads the leaderboard data from the "leaderboard.csv" file and displays it in a fancy grid format.
+    If the file is empty, it prints a message indicating that the leaderboard is empty.
+    If the file does not exist, it creates an empty file and prints a message indicating that an empty leaderboard was created.
 
     Parameters:
         None
 
     Returns:
         None
-
-    Raises:
-        FileNotFoundError: If the "leaderboard.csv" file is not found.
     """
 
     filename = "leaderboard.csv"
@@ -309,9 +308,15 @@ def read_leaderboard():
             reader = csv.reader(f)
             headers = next(reader)
             data = list(reader)
-            print(tabulate(data, headers, tablefmt='fancy_grid'))
+            if data:
+                print(tabulate(data, headers, tablefmt='fancy_grid'))
+            else:
+                print("Leaderboard is empty.")
     except FileNotFoundError:
-        print(f"{filename} not found.")
+        with open(filename, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Name", "Score", "Time", "Question Count", "Avg. Time/Question"])
+        print(f"Created {filename} file for leaderboard. It is empty.")
 
 if __name__ == "__main__":
     main()
