@@ -161,3 +161,4 @@ cython_debug/
 
 # User
 leaderboard.csv
+leaderboard.db
