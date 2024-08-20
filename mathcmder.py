@@ -1,6 +1,6 @@
 import argparse
+import sqlite3
 import time
-import csv
 from random import randint
 from pytimedinput import timedInput
 from tabulate import tabulate
@@ -19,6 +19,16 @@ def main():
     Returns:
         None
     """
+
+    # SQLite
+    conn = sqlite3.connect("leaderboard.db")
+    c = conn.cursor()
+    c.execute(
+        "CREATE TABLE IF NOT EXISTS leaderboard (name text, score integer, time real, count integer, avg real)"
+    )
+    conn.commit()
+    conn.close()
+
     # Parse arguments
     args = parse_args()
 
