@@ -235,6 +235,20 @@ def run_quiz(args: object) -> tuple:
     return score, total_time, time_list
 
 def save_score(name: str, score: int, total_time: float, count: int, ave: float) -> None:
+    """
+    Save the score of a player in the leaderboard.
+
+    Args:
+        name (str): The name of the player.
+        score (int): The score achieved by the player.
+        total_time (float): The total time taken by the player.
+        count (int): The number of questions attempted by the player.
+        ave (float): The average time taken per question by the player.
+
+    Returns:
+        None: This function does not return anything.
+    """
+    
     fieldnames = ["Name", "Score", "Time", "Question Count", "Avg. Time/Question"]
     filename = "leaderboard.csv"
 
@@ -253,6 +267,20 @@ def save_score(name: str, score: int, total_time: float, count: int, ave: float)
         writer.writerow({"Name": name, "Score": score, "Time": "{:.02f}".format(total_time), "Question Count": count, "Avg. Time/Question": "{:.02f}".format(ave)})
 
 def endgame(name: str, score: int, total_time: float, count: int, time_list: list) -> None:
+    """
+    Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
+
+    Parameters:
+        name (str): The name of the player.
+        score (int): The player's score.
+        total_time (float): The total time taken to complete the quiz in seconds.
+        count (int): The total number of questions in the quiz.
+        time_list (list): A list of the time taken for each question.
+
+    Returns:
+        None
+    """
+    
     print("\nQuiz finished!")
     print(f"Your score is {score} out of {count}")
     print(f"You finished in {total_time:.02f}s")
@@ -262,6 +290,19 @@ def endgame(name: str, score: int, total_time: float, count: int, time_list: lis
     raise SystemExit("This was CS50P!")
 
 def read_leaderboard():
+    """
+    Reads the leaderboard data from the "leaderboard.csv" file and displays it in a fancy grid format.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: If the "leaderboard.csv" file is not found.
+    """
+
     filename = "leaderboard.csv"
     try:
         with open(filename, "r") as f:
