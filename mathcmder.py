@@ -258,23 +258,12 @@ def save_score(name: str, score: int, total_time: float, count: int, ave: float)
     Returns:
         None: This function does not return anything.
     """
-    
-    fieldnames = ["Name", "Score", "Time", "Question Count", "Avg. Time/Question"]
-    filename = "leaderboard.csv"
 
-    write_header = False
-    try:
-        with open(filename, "r") as f:
-            if f.read().isspace():
-                write_header = True
-    except FileNotFoundError:
-        write_header = True
-
-    with open(filename, "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        if write_header:
-            writer.writeheader()
-        writer.writerow({"Name": name, "Score": score, "Time": "{:.02f}".format(total_time), "Question Count": count, "Avg. Time/Question": "{:.02f}".format(ave)})
+    conn = sqlite3.connect("leaderboard.db")
+    c = conn.cursor()
+    c.execute("INSERT INTO leaderboard VALUES (?, ?, ?, ?, ?)", (name, score, total_time, count, ave))
+    conn.commit()
+    conn.close()
 
 def endgame(name: str, score: int, total_time: float, count: int, time_list: list) -> None:
     """
