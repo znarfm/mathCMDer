@@ -189,16 +189,17 @@ def calculate(question: str) -> int:
     except ValueError:
         raise ValueError("Invalid question format")
 
-    if operation == "+":
-        return num1 + num2
-    elif operation == "-":
-        return num1 - num2
-    elif operation == "*":
-        return num1 * num2
-    elif operation == "/":
-        return num1 // num2
-    else:
-        raise ValueError("Unsupported operation")
+    match operation:
+        case "+":
+            return num1 + num2
+        case "-":
+            return num1 - num2
+        case "*":
+            return num1 * num2
+        case "/":
+            return num1 // num2
+        case _:
+            raise ValueError("Unsupported operation")
 
 
 def run_quiz(args: object) -> tuple:
