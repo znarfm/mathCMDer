@@ -11,7 +11,7 @@ def main():
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
     c.execute(
-        "CREATE TABLE IF NOT EXISTS leaderboard (name text, score integer, time real, count integer, avg real)"
+        "CREATE TABLE IF NOT EXISTS leaderboard (datetime text, name text, score integer, time real, count integer, avg real)"
     )
     conn.commit()
     conn.close()
@@ -249,7 +249,7 @@ def save_score(name: str, score: int, total_time: float, count: int, ave: float)
 
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
-    c.execute("INSERT INTO leaderboard VALUES (?, ?, ?, ?, ?)", (name, score, total_time, count, ave))
+    c.execute("INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)", (name, score, total_time, count, ave))
     conn.commit()
     conn.close()
 
@@ -295,7 +295,7 @@ def read_leaderboard():
     conn.close()
 
     if rows:
-        print(tabulate(rows, headers=["Name", "Score", "Time", "Question Count", "Avg. Time/Question"], tablefmt='fancy_grid'))
+        print(tabulate(rows, headers=["Date", "Name", "Score", "Time", "Question Count", "Avg. Time/Question"], tablefmt='fancy_grid'))
     else:
         print("Leaderboard is empty.")
 
