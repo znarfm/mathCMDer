@@ -20,6 +20,8 @@ def main():
     args = parse_args()
 
     if args.command == "start":
+        if args.name == "Anonymous" and not args.opt_out:
+            args.name = input("Enter your name: ")
         # Start the quiz
         score, total_time, time_list = run_quiz(args)
         # End the quiz
@@ -50,13 +52,21 @@ def parse_args():
         "start",
         help="start the quiz",
     )
-    start_parser.add_argument(
+    name_group = start_parser.add_mutually_exclusive_group()
+    name_group.add_argument(
         "-n",
         "--name",
         metavar="NAME",
         help="enter your name",
         type=str,
         default="Anonymous",
+    )
+    name_group.add_argument(
+        "-nl",
+        "--no-leaderboard",
+        dest="opt_out",
+        help="opt out of the leaderboard (default: False)",
+        action="store_true",
     )
     start_parser.add_argument(
         "-c",
