@@ -7,19 +7,6 @@ from tabulate import tabulate
 
 
 def main():
-    """
-    Executes the main logic of the program.
-
-    This function parses the command line arguments, starts the quiz,
-    and ends the quiz.
-
-    Parameters:
-        None
-
-    Returns:
-        None
-    """
-
     # SQLite
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
