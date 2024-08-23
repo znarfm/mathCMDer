@@ -41,7 +41,6 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(
         description="A simple math quiz CLI",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="This is a project by Meinard for CS50P",
     )
     subparsers = parser.add_subparsers(dest="command", metavar="COMMAND", required=True)
@@ -50,7 +49,6 @@ def parse_args():
     start_parser = subparsers.add_parser(
         "start",
         help="start the quiz",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     start_parser.add_argument(
         "-n",
@@ -64,7 +62,8 @@ def parse_args():
         "-c",
         "--count",
         metavar="NUMBER_OF_QUESTIONS",
-        help="enter number of questions you want to answer",
+        help="enter number of questions you want to answer (default: 10)",
+        default=10,
         type=int,
         required=True,
     )
@@ -79,7 +78,7 @@ def parse_args():
     start_parser.add_argument(
         "-l",
         "--lowest",
-        help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)",
+        help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor; default: 1)",
         metavar="LOWEST_OPERAND",
         type=int,
         default=1,
@@ -87,7 +86,7 @@ def parse_args():
     start_parser.add_argument(
         "-m",
         "--max",
-        help="enter the highest operand value (note: for division problems, this will be the highest possible divisor)",
+        help="enter the highest operand value (note: for division problems, this will be the highest possible divisor; default: 10)",
         dest="highest",
         metavar="HIGHEST_OPERAND",
         type=int,
@@ -97,7 +96,7 @@ def parse_args():
         "-t",
         "--timer",
         metavar="SECONDS",
-        help="set a timeout for each question",
+        help="set a timeout for each question (default: no timeout)",
         type=int,
         default=-1,
     )
@@ -106,7 +105,6 @@ def parse_args():
     lb_parser = subparsers.add_parser(
         "leaderboard",
         help="prints out the leaderboard",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
     lb_parser.add_argument(
