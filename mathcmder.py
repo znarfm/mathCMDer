@@ -20,7 +20,7 @@ def main():
     args = parse_args()
 
     if args.command == "start":
-        if args.name == "Anonymous" and not args.opt_out:
+        if args.name is None and not args.opt_out:
             args.name = input("Enter your name: ")
         # Start the quiz
         score, total_time, time_list = run_quiz(args)
@@ -59,7 +59,6 @@ def parse_args():
         metavar="NAME",
         help="enter your name",
         type=str,
-        default="Anonymous",
     )
     name_group.add_argument(
         "-nl",
@@ -332,10 +331,10 @@ def read_leaderboard(args: object) -> None:
     params = []
     if args.leaderboard_operation is not None:
         query += " AND operation = ?"
-        params.append(args.operation)
+        params.append(args.leaderboard_operation)
     if args.leaderboard_name is not None:
         query += " AND name = ?"
-        params.append(args.name)
+        params.append(args.leaderboard_name)
 
     if args.leaderboard_sort in ["score", "count"]:
         query += f" ORDER BY {args.leaderboard_sort} DESC"
@@ -363,6 +362,8 @@ def read_leaderboard(args: object) -> None:
                 tablefmt="fancy_grid",
             )
         )
+    elif args.leaderboard_name is not None:
+        print(f"No results found for name {args.leaderboard_name}.")
     else:
         print("Leaderboard is empty.")
 
