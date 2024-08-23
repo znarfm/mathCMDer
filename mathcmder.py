@@ -11,7 +11,7 @@ def main():
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
     c.execute(
-        "CREATE TABLE IF NOT EXISTS leaderboard (datetime text, name text, score integer, time real, count integer, avg real)"
+        "CREATE TABLE IF NOT EXISTS leaderboard (date text, name text, score integer, count integer, time real, avg real)"
     )
     conn.commit()
     conn.close()
@@ -23,10 +23,10 @@ def main():
         # Start the quiz
         score, total_time, time_list = run_quiz(args)
         # End the quiz
-        endgame(args.name, score, total_time, args.count, time_list)
+        endgame(args.name, score, args.count, total_time, time_list)
     elif args.command == "leaderboard":
         # Show the leaderboard
-        read_leaderboard()
+        read_leaderboard(args)
 
 
 def parse_args():
@@ -44,7 +44,7 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="This is a project by Meinard for CS50P",
     )
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = parser.add_subparsers(dest="command", metavar="COMMAND", required=True)
 
     # Sub parser: start
     start_parser = subparsers.add_parser(
@@ -80,6 +80,7 @@ def parse_args():
         "-l",
         "--lowest",
         help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)",
+        metavar="LOWEST_OPERAND",
         type=int,
         default=1,
     )
@@ -88,6 +89,7 @@ def parse_args():
         "--max",
         help="enter the highest operand value (note: for division problems, this will be the highest possible divisor)",
         dest="highest",
+        metavar="HIGHEST_OPERAND",
         type=int,
         default=10,
     )
@@ -101,10 +103,36 @@ def parse_args():
     )
 
     # Sub parser: show scores
-    subparsers.add_parser(
+    lb_parser = subparsers.add_parser(
         "leaderboard",
         help="prints out the leaderboard",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    lb_parser.add_argument(
+        "-s",
+        "--sort",
+        dest="leaderboard_sort",
+        help="sort the leaderboard (best to worst) according to a column",
+        choices=["score", "time", "count", "avg"],
+    )
+
+    lb_parser.add_argument(
+        "-o",
+        "--operation",
+        dest="leaderboard_operation",
+        help="enter which operation to show leaderboard for",
+        type=str,
+        choices=["+", "-", "*", "/"],
+    )
+
+    lb_parser.add_argument(
+        "-n",
+        "--name",
+        metavar="NAME",
+        dest="leaderboard_name",
+        help="enter which name to show leaderboard for",
+        type=str,
     )
 
     args = parser.parse_args()
@@ -228,7 +256,7 @@ def run_quiz(args: object) -> tuple:
 
 
 def save_score(
-    name: str, score: int, total_time: float, count: int, ave: float
+    name: str, score: int, count: int, total_time: float, ave: float
 ) -> None:
     """
     Save the score of a player in the leaderboard.
@@ -248,14 +276,14 @@ def save_score(
     c = conn.cursor()
     c.execute(
         "INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)",
-        (name, score, total_time, count, ave),
+        (name, score, count, total_time, ave),
     )
     conn.commit()
     conn.close()
 
 
 def endgame(
-    name: str, score: int, total_time: float, count: int, time_list: list
+    name: str, score: int, count: int, total_time: float, time_list: list
 ) -> None:
     """
     Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
@@ -276,11 +304,11 @@ def endgame(
     print(f"You finished in {total_time:.02f}s")
     ave = sum(time_list) / count
     print(f"Average time per question: {ave:.02f}s")
-    save_score(name, score, total_time, count, ave)
+    save_score(name, score, count, total_time, ave)
     raise SystemExit("This was CS50P!")
 
 
-def read_leaderboard():
+def read_leaderboard(args: object) -> None:
     """
     Reads the leaderboard data from the SQLite database "leaderboard.db" and displays it in a fancy grid format.
     If the database is empty, it prints a message indicating that the leaderboard is empty.
@@ -292,9 +320,23 @@ def read_leaderboard():
         None
     """
 
+    query = "SELECT * FROM leaderboard WHERE 1=1"
+    params = []
+    if args.leaderboard_operation is not None:
+        query += " AND operation = ?"
+        params.append(args.operation)
+    if args.leaderboard_name is not None:
+        query += " AND name = ?"
+        params.append(args.name)
+
+    if args.leaderboard_sort in ["score", "count"]:
+        query += f" ORDER BY {args.leaderboard_sort} DESC"
+    elif args.leaderboard_sort in ["time", "avg"]:
+        query += f" ORDER BY {args.leaderboard_sort} ASC"
+
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
-    c.execute("SELECT * FROM leaderboard")
+    c.execute(query, params)
     rows = c.fetchall()
     conn.close()
 
@@ -306,8 +348,8 @@ def read_leaderboard():
                     "Date",
                     "Name",
                     "Score",
-                    "Time",
                     "Question Count",
+                    "Time",
                     "Avg. Time/Question",
                 ],
                 tablefmt="fancy_grid",
