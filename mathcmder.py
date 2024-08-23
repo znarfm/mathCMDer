@@ -35,9 +35,6 @@ def parse_args():
     """
     Parse the command line arguments to configure the math quiz.
 
-    Parameters:
-        None
-
     Returns:
         argparse.Namespace: An object containing the parsed command line arguments.
     """
@@ -177,27 +174,16 @@ def generate(operation: str, lowest: int, highest: int) -> str:
 
 
 def calculate(question: str) -> int:
-    """
-    Calculate the result of a mathematical operation.
+    """Calculate the result of an arithmetic expression.
 
     Args:
-        question (str): A string representing a mathematical operation. The
-            format of the string should be "<num1> <operation> <num2>", where
-            <num1> and <num2> are integers and <operation> is one of "+", "-",
-            or "*".
-
-    Returns:
-        int: The result of the mathematical operation.
+        question (str): A string representing an arithmetic expression. The format of the string should be "<num1> <operation> <num2>", where <num1> and <num2> are integers and <operation> is one of "+", "-", "*", or "/".
 
     Raises:
-        ValueError: If the question string is not in the correct format or if
-            the operation is not supported.
+        ValueError: If the question string is not in the correct format.
 
-    Example:
-        >>> calculate("5 + 3")
-        8
-        >>> calculate("10 * 2")
-        20
+    Returns:
+        int: The result of the arithmetic expression.
     """
     try:
         num1, operation, num2 = question.split()
@@ -222,7 +208,7 @@ def run_quiz(args: object) -> tuple:
     Run a quiz with the given arguments.
 
     Args:
-        args (object): An object containing the arguments for running the quiz.
+        args (object): An object returned by parse_args().
 
     Returns:
         tuple: A tuple containing the score (int), total time (float), and a list of question times (list[float]).
@@ -295,10 +281,11 @@ def endgame(
     Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
 
     Parameters:
+        opt_out (bool): Whether the user opted out of the leaderboard.
         name (str): The name of the player.
         score (int): The player's score.
-        total_time (float): The total time taken to complete the quiz in seconds.
         count (int): The total number of questions in the quiz.
+        total_time (float): The total time taken to complete the quiz in seconds.
         time_list (list): A list of the time taken for each question.
 
     Returns:
@@ -321,7 +308,7 @@ def read_leaderboard(args: object) -> None:
     If the database is empty, it prints a message indicating that the leaderboard is empty.
 
     Parameters:
-        None
+        args (object): An object returned by parse_args().
 
     Returns:
         None
