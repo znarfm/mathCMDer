@@ -1,89 +1,110 @@
 # MathCMDer
 
-## Video Demo: Coming Soon
-
 ## Description
 
 MathCMDer is a command-line interface (CLI) math quiz application written in Python. It allows users to test their math skills by answering a series of arithmetic questions.
 
 This is a project for [CS50P](https://cs50.harvard.edu/python/).
 
-### Features
+## Features
 
 - Customizable number of questions
 - Choose from addition, subtraction, multiplication, or division operations
 - Set a range of operand values
-- Optional timer for each question
-- Local leaderboard
+- *Optional* timer for each question
+- Local leaderboard (using SQLite)
 
-### Installation
+## Installation
 
-Make sure you have Python 3.6 or higher installed to run this program.
+Make sure you have Python installed to run this program.
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/znarfm/mathCMDer.git
-```
+    ```bash
+    git clone https://github.com/znarfm/mathCMDer.git && cd mathCMDer
+    ```
 
-2. Navigate to the project directory
+2. Create a virtual environment and activate it
 
-```bash
-cd mathCMDer
-```
+    On Windows:
+
+    ```bash
+    python -m venv venv
+    ./venv/Scripts/activate
+    ```
+
+    On macOS and Linux:
+
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    ```
 
 3. Install the required dependencies:
 
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## Usage
+
+MathCMDer allows you to start a quiz or view the leaderboard.
+
+### Start a quiz
+
 ```bash
-pip install -r requirements.txt
+python mathcmder.py start [options]
 ```
 
-### Usage
+Available options:
 
-To start the math quiz, run the following command:
-
-```bash
-python mathcmder.py start -c <number_of_questions> -o <operation> -l <lowest_value> -m <highest_value> -t <timeout> -n <name>
-```
-
-Replace the placeholders with the desired values:
-
-- `<number_of_questions>` (required): The number of questions you want to answer.
-- `<operation>` (required): The arithmetic operation you want to quiz(`+` for addition, `-` for subtraction, `*` for multiplication).
-- `<lowest_value>` (defaults to `1`): The lowest possible value for the operands.
-- `<highest_value>` (defaults to `10`): The highest possible value for the operands.
-- `<timeout>`: Set a timeout (in seconds) for each question. If not specified, there will be no timeout.
-- `<name>` (defaults to `Anonymous`): Name to be saved in the leaderboard.
+- **`-c` or `--count`**: Set the number of questions
+- **`-o` or `--operation`**: Set the math operation (+, -, *, /)
+- `-l` or `--lowest`: Set the lowest operand value (default: 1)
+- `-m` or `--max`: Set the highest operand value (default: 10)
+- `-t` or `--timer`: Set a timeout (in seconds) for each question (default: no timeout)
+- `-n` or `--name`: Set the name to be saved in the leaderboard (Default: Anonymous)
+- `-nl` or `--no-leaderboard`: Opt out of the leaderboard
 
 Example usage:
 
-Both are essentially the same. These will start a math quiz with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question. Since there is no `--name` flag given, the default name in the leaderboard will appear as `Anonymous`.
-
 ```bash
-python mathcmder.py start --count 10 --operation + --lowest 1 --max 10 --timer 5
+python mathcmder.py start -c 10 -o+ -l 1 -m 10 -t 5 -n "Juan"
 ```
 
-```bash
-python mathcmder.py start -c10 -o+ -l1 -m10 -t5
-```
-
-This will start the program with 15 division questions, using the default operand values without a timeout, and the name `Juan` will appear in the leaderboard.
+This will start the program with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question. The name `Juan` instead of `Anonymous` will appear in the leaderboard.
 
 ```bash
-python mathcmder.py start -c15 -o/ -n "Juan"
+python mathcmder.py start -c15 -o* -nl
 ```
 
-To view the leaderboard values, use the `leaderboard` command:
+This will start the program with 15 multiplication questions, using the default operand values (1 to 10) without a timeout, and will not record the results in the leaderboard.
+
+### View the leaderboard
 
 ```bash
-python mathcmder.py leaderboard
+python mathcmder.py leaderboard [options]
 ```
 
-## To-do
+Available options:
 
-- [ ] Improve leaderboard (add sorting flags/arguments)
-- [ ] Add flag to opt out in leaderboards
-- [ ] Convert to object-oriented
+- `-o` or `--operation`: Filter the leaderboard by operation (+, -, *, /)
+- `-n` or `--name`: Filter the leaderboard by name
+- `-s` or `--sort`: Sort the leaderboard by score, count, time, or avg
+
+Example usage:
+
+```bash
+python mathcmder.py leaderboard -o+ -n "Juan" -s count
+```
+
+This will display the leaderboard sorted by question count for the addition operation and only show the results of the user named "Juan".
+
+```bash
+python mathcmder.py leaderboard -s avg
+```
+
+This will display the leaderboard sorted by average time per question (best to worst).
 
 ## Contributing
 
