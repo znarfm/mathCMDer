@@ -44,10 +44,7 @@ def parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="This is a project by Meinard for CS50P",
     )
-    subparsers = parser.add_subparsers(
-        dest="command",
-        required=True
-    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Sub parser: start
     start_parser = subparsers.add_parser(
@@ -80,11 +77,11 @@ def parse_args():
         required=True,
     )
     start_parser.add_argument(
-        "-l", 
-        "--lowest", 
-        help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)", 
-        type=int, 
-        default=1
+        "-l",
+        "--lowest",
+        help="enter the lowest operand value (note: for division problems, this will be the lowest possible divisor)",
+        type=int,
+        default=1,
     )
     start_parser.add_argument(
         "-m",
@@ -109,13 +106,11 @@ def parse_args():
         help="prints out the leaderboard",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    
+
     args = parser.parse_args()
 
     if args.command == "start" and args.lowest > args.highest:
-        parser.error(
-            "lowest operand cannot be greater than highest operand"
-        )
+        parser.error("lowest operand cannot be greater than highest operand")
 
     return args
 
@@ -136,14 +131,15 @@ def generate(operation: str, lowest: int, highest: int) -> str:
     # To avoid division by zero
     if lowest == 0:
         lowest = randint(1, highest)
-    
+
     num1 = randint(lowest, highest)
     num2 = randint(lowest, highest)
-    
-    if operation == "/":
-        return f"{num1 * num2} {operation} {num1}"
-    else:
-        return f"{num1} {operation} {num2}"
+
+    return (
+        f"{num1 * num2} {operation} {num1}"
+        if operation == "/"
+        else f"{num1} {operation} {num2}"
+    )
 
 
 def calculate(question: str) -> int:
@@ -185,8 +181,6 @@ def calculate(question: str) -> int:
             return num1 * num2
         case "/":
             return num1 // num2
-        case _:
-            raise ValueError("Unsupported operation")
 
 
 def run_quiz(args: object) -> tuple:
@@ -232,7 +226,10 @@ def run_quiz(args: object) -> tuple:
 
     return score, total_time, time_list
 
-def save_score(name: str, score: int, total_time: float, count: int, ave: float) -> None:
+
+def save_score(
+    name: str, score: int, total_time: float, count: int, ave: float
+) -> None:
     """
     Save the score of a player in the leaderboard.
 
@@ -249,11 +246,17 @@ def save_score(name: str, score: int, total_time: float, count: int, ave: float)
 
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
-    c.execute("INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)", (name, score, total_time, count, ave))
+    c.execute(
+        "INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)",
+        (name, score, total_time, count, ave),
+    )
     conn.commit()
     conn.close()
 
-def endgame(name: str, score: int, total_time: float, count: int, time_list: list) -> None:
+
+def endgame(
+    name: str, score: int, total_time: float, count: int, time_list: list
+) -> None:
     """
     Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
 
@@ -267,7 +270,7 @@ def endgame(name: str, score: int, total_time: float, count: int, time_list: lis
     Returns:
         None
     """
-    
+
     print("\nQuiz finished!")
     print(f"Your score is {score} out of {count}")
     print(f"You finished in {total_time:.02f}s")
@@ -275,6 +278,7 @@ def endgame(name: str, score: int, total_time: float, count: int, time_list: lis
     print(f"Average time per question: {ave:.02f}s")
     save_score(name, score, total_time, count, ave)
     raise SystemExit("This was CS50P!")
+
 
 def read_leaderboard():
     """
@@ -295,9 +299,23 @@ def read_leaderboard():
     conn.close()
 
     if rows:
-        print(tabulate(rows, headers=["Date", "Name", "Score", "Time", "Question Count", "Avg. Time/Question"], tablefmt='fancy_grid'))
+        print(
+            tabulate(
+                rows,
+                headers=[
+                    "Date",
+                    "Name",
+                    "Score",
+                    "Time",
+                    "Question Count",
+                    "Avg. Time/Question",
+                ],
+                tablefmt="fancy_grid",
+            )
+        )
     else:
         print("Leaderboard is empty.")
+
 
 if __name__ == "__main__":
     main()
