@@ -72,8 +72,7 @@ def parse_args():
         "-c",
         "--count",
         metavar="NUMBER_OF_QUESTIONS",
-        help="enter number of questions you want to answer (default: 10)",
-        default=10,
+        help="enter number of questions you want to answer",
         type=int,
         required=True,
     )
