@@ -229,14 +229,14 @@ def run_quiz(args: object) -> tuple:
         # Catch error in case user inputs something other than a number
         try:
             if timed_out:
-                print("Timed out! ❌")
+                print("Timed out! ❌⌛")
             elif correct == int(ans):
                 score += 1
                 print("Correct! ✅")
             else:
                 print("Incorrect. ❌")
         except ValueError:
-            pass
+            raise ValueError("Invalid answer format. ❌")
 
         question_time_end = time.time()
         time_list.append(question_time_end - question_time_start)
