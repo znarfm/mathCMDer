@@ -248,7 +248,7 @@ def run_quiz(args: object) -> tuple:
 
 
 def save_score(
-    name: str, score: int, count: int, total_time: float, ave: float
+    name: str, score: int, count: int, total_time: float, ave: float, db_name: str = "leaderboard.db"
 ) -> None:
     """
     Save the score of a player in the leaderboard.
@@ -259,12 +259,13 @@ def save_score(
         total_time (float): The total time taken by the player.
         count (int): The number of questions attempted by the player.
         ave (float): The average time taken per question by the player.
+        db_name (str, optional): The name of the SQLite database file. Defaults to "leaderboard.db".
 
     Returns:
         None: This function does not return anything.
     """
 
-    conn = sqlite3.connect("leaderboard.db")
+    conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute(
         "INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)",
@@ -298,11 +299,11 @@ def endgame(
     ave = sum(time_list) / count
     print(f"Average time per question: {ave:.02f}s")
     if not opt_out:
-        save_score(name, score, count, total_time, ave)
+        save_score(name, score, count, total_time, ave, "leaderboard.db")
     raise SystemExit("This was CS50P!")
 
 
-def read_leaderboard(args: object) -> None:
+def read_leaderboard(args: object, db_name: str = "leaderboard.db") -> None:
     """
     Reads the leaderboard data from the SQLite database "leaderboard.db" and displays it in a fancy grid format.
     If the database is empty, it prints a message indicating that the leaderboard is empty.
@@ -328,7 +329,7 @@ def read_leaderboard(args: object) -> None:
     elif args.leaderboard_sort in ["time", "avg"]:
         query += f" ORDER BY {args.leaderboard_sort} ASC"
 
-    conn = sqlite3.connect("leaderboard.db")
+    conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute(query, params)
     rows = c.fetchall()
