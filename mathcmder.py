@@ -222,21 +222,31 @@ def run_quiz(args: object) -> tuple:
         correct = calculate(question)
         question_time_start = time.time()
 
-        ans, timed_out = timedInput(
-            f"Q#{i+1}\t{question} = ", timeout=args.timer, resetOnInput=False
-        )
-
-        # Catch error in case user inputs something other than a number
+        user_input = None
         try:
-            if timed_out:
-                print("Timed out! ❌⌛")
-            elif correct == int(ans):
+            if args.timer >= 0:
+                user_input, timed_out = timedInput(
+                    f"Q#{i+1}\t{question} = ", timeout=args.timer, resetOnInput=False
+                )
+                if timed_out:
+                    print("Timed out! ❌⌛")
+                    user_input = None
+            else:
+                user_input = input(f"Q#{i+1}\t{question} = ")
+        except KeyboardInterrupt:
+            print("Quitting quiz...")
+            raise SystemExit
+        except TypeError:
+            pass
+
+        try:
+            if not user_input.isnumeric() or int(user_input) != correct:
+                print("Incorrect. ❌")
+            else:
                 score += 1
                 print("Correct! ✅")
-            else:
-                print("Incorrect. ❌")
-        except ValueError:
-            raise ValueError("Invalid answer format. ❌")
+        except (ValueError, TypeError, AttributeError):
+            pass
 
         question_time_end = time.time()
         time_list.append(question_time_end - question_time_start)
@@ -293,10 +303,10 @@ def endgame(
         None
     """
 
+    ave = sum(time_list) / count
     print("\nQuiz finished!")
     print(f"Your score is {score} out of {count}")
     print(f"You finished in {total_time:.02f}s")
-    ave = sum(time_list) / count
     print(f"Average time per question: {ave:.02f}s")
     if not opt_out:
         save_score(name, score, count, total_time, ave, "leaderboard.db")
