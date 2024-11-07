@@ -11,7 +11,7 @@ def main():
     conn = sqlite3.connect("leaderboard.db")
     c = conn.cursor()
     c.execute(
-        "CREATE TABLE IF NOT EXISTS leaderboard (date text, name text, score integer, count integer, time real, avg real)"
+        "CREATE TABLE IF NOT EXISTS leaderboard (date text, name text, score integer, count integer, time real, avg real, operation text)"
     )
     conn.commit()
     conn.close()
@@ -25,7 +25,7 @@ def main():
         # Start the quiz
         score, total_time, time_list = run_quiz(args)
         # End the quiz
-        endgame(args.opt_out, args.name, score, args.count, total_time, time_list)
+        endgame(args.opt_out, args.name, score, args.count, args.operation, total_time, time_list)
     elif args.command == "leaderboard":
         # Show the leaderboard
         read_leaderboard(args)
@@ -263,6 +263,7 @@ def save_score(
     count: int,
     total_time: float,
     ave: float,
+    operation: str,
     db_name: str = "leaderboard.db",
 ) -> None:
     """
@@ -283,15 +284,15 @@ def save_score(
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute(
-        "INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)",
-        (name, score, count, total_time, ave),
+        "INSERT INTO leaderboard VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?)",
+        (name, score, count, total_time, ave, operation),
     )
     conn.commit()
     conn.close()
 
 
 def endgame(
-    opt_out: bool, name: str, score: int, count: int, total_time: float, time_list: list
+    opt_out: bool, name: str, score: int, count: int, operation: str, total_time: float, time_list: list
 ) -> None:
     """
     Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
@@ -314,7 +315,7 @@ def endgame(
     print(f"You finished in {total_time:.02f}s")
     print(f"Average time per question: {ave:.02f}s")
     if not opt_out:
-        save_score(name, score, count, total_time, ave, "leaderboard.db")
+        save_score(name, score, count, total_time, ave, operation, "leaderboard.db")
     raise SystemExit("This was CS50P!")
 
 
@@ -361,6 +362,7 @@ def read_leaderboard(args: object, db_name: str = "leaderboard.db") -> None:
                     "Question Count",
                     "Time",
                     "Avg. Time/Question",
+                    "Operation",
                 ],
                 tablefmt="fancy_grid",
             )
