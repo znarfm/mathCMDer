@@ -1,119 +1,140 @@
-# MathCMDer
+# MathCMDer 🧮
 
 ## Description
 
-MathCMDer is a command-line interface (CLI) math quiz application written in Python. It allows users to test their math skills by answering a series of arithmetic questions.
+MathCMDer is a command-line interface (CLI) math quiz application written in Python that helps users practice their arithmetic skills through interactive questions. It features customizable difficulty levels, various operations, and a local leaderboard system to track progress.
 
-This is a project for [CS50P](https://cs50.harvard.edu/python/).
+This project was developed as part of the [CS50P](https://cs50.harvard.edu/python/) course requirements.
 
-## Features
+## 🚀 Features
 
-- Customizable number of questions
-- Choose from addition, subtraction, multiplication, or division operations
-- Set a range of operand values
-- *Optional* timer for each question
-- Local leaderboard (using SQLite)
+- **Customizable Quiz Settings**
+  - Choose number of questions
+  - Select operation type (addition, subtraction, multiplication, or division)
+  - Set custom operand ranges
+  - Optional timer for each question
+  
+- **Performance Tracking**
+  - Local leaderboard using SQLite
+  - Track scores, completion time, and average response time
+  - Filter and sort leaderboard results
 
-## Installation
+## 🛠️ Prerequisites
 
-Make sure you have Python installed to run this program.
+- Python 3.6 or higher
+- pip (Python package installer)
 
-1. Clone the repository
+## ⚙️ Installation
 
-    ```bash
-    git clone https://github.com/znarfm/mathCMDer.git && cd mathCMDer
-    ```
+1. Clone the repository:
+```bash
+git clone https://github.com/znarfm/mathCMDer.git
+cd mathCMDer
+```
 
-2. Create a virtual environment and activate it
+2. Create and activate a virtual environment:
 
-    On Windows:
+**Windows:**
+```bash
+python -m venv venv
+.\venv\Scripts\activate
+```
 
-    ```bash
-    python -m venv venv
-    ./venv/Scripts/activate
-    ```
+**macOS/Linux:**
+```bash
+python -m venv venv
+source venv/bin/activate
+```
 
-    On macOS and Linux:
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate
-    ```
+## 📖 Usage
 
-3. Install the required dependencies:
+### Starting a Quiz
 
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-## Usage
-
-MathCMDer allows you to start a quiz or view the leaderboard.
-
-### Start a quiz
-
+Basic command structure:
 ```bash
 python mathcmder.py start [options]
 ```
 
-Available options:
+#### Required Options:
+- `-c, --count NUMBER_OF_QUESTIONS` - Set number of questions
+- `-o, --operation {+,-,*,/}` - Choose arithmetic operation
 
-- **`-c` or `--count`**: Set the number of questions
-- **`-o` or `--operation`**: Set the math operation (+, -, *, /)
-- `-l` or `--lowest`: Set the lowest operand value (default: 1)
-- `-m` or `--max`: Set the highest operand value (default: 10)
-- `-t` or `--timer`: Set a timeout (in seconds) for each question (default: no timeout)
-- `-n` or `--name`: Set the name to be saved in the leaderboard (Default: Anonymous)
-- `-nl` or `--no-leaderboard`: Opt out of the leaderboard
+#### Optional Parameters:
+- `-l, --lowest LOWEST_OPERAND` - Set minimum operand value (default: 1)
+- `-m, --max HIGHEST_OPERAND` - Set maximum operand value (default: 10)
+- `-t, --timer SECONDS` - Set question timeout in seconds
+- `-n, --name NAME` - Set player name for leaderboard
+- `-nl, --no-leaderboard` - Opt out of leaderboard recording
 
-Example usage:
+#### Examples:
 
+Basic addition quiz:
 ```bash
-python mathcmder.py start -c 10 -o+ -l 1 -m 10 -t 5 -n "Juan"
+python mathcmder.py start -c 10 -o+
 ```
 
-This will start the program with 10 addition questions, using operands from 1 to 10, and a timeout of 5 seconds for each question. The name `Juan` instead of `Anonymous` will appear in the leaderboard.
-
+Timed multiplication quiz with custom range:
 ```bash
-python mathcmder.py start -c15 -o* -nl
+python mathcmder.py start -c 15 -o* -l 2 -m 12 -t 5 -n "Player1"
 ```
 
-This will start the program with 15 multiplication questions, using the default operand values (1 to 10) without a timeout, and will not record the results in the leaderboard.
+### Viewing the Leaderboard
 
-### View the leaderboard
-
+Basic command structure:
 ```bash
 python mathcmder.py leaderboard [options]
 ```
 
-Available options:
+#### Available Options:
+- `-o, --operation {+,-,*,/}` - Filter by operation
+- `-n, --name NAME` - Filter by player name
+- `-s, --sort {score,time,count,avg}` - Sort results
 
-- `-o` or `--operation`: Filter the leaderboard by operation (+, -, *, /)
-- `-n` or `--name`: Filter the leaderboard by name
-- `-s` or `--sort`: Sort the leaderboard by score, count, time, or avg
+#### Examples:
 
-Example usage:
-
+View all scores:
 ```bash
-python mathcmder.py leaderboard -o+ -n "Juan" -s count
+python mathcmder.py leaderboard
 ```
 
-This will display the leaderboard sorted by question count for the addition operation and only show the results of the user named "Juan".
-
+Filter multiplication scores for a specific player:
 ```bash
-python mathcmder.py leaderboard -s avg
+python mathcmder.py leaderboard -o* -n "Player1" -s score
 ```
 
-This will display the leaderboard sorted by average time per question (best to worst).
+## 🧪 Testing
 
-## Contributing
+*Coming soon: Information about running tests and test coverage*
 
-Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or PR on the [GitHub repository](https://github.com/znarfm/mathCMDer.git).
+## 🤝 Contributing
 
-## License
+Contributions are welcome! Here's how you can help:
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/znarfm/mathCMDer/blob/main/LICENSE) file for more information.
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/improvement`)
+3. Make your changes
+4. Commit your changes (`git commit -am 'Add new feature'`)
+5. Push to the branch (`git push origin feature/improvement`)
+6. Create a Pull Request
+
+Please ensure your PRs include appropriate documentation and test coverage.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/znarfm/mathCMDer/blob/main/LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- CS50P course team for the project inspiration
+- Contributors and users of the project
 
 ---
 
-Happy quizzing with MathCMDer!
+📫 For bug reports and feature requests, please [open an issue](https://github.com/znarfm/mathCMDer/issues).
+
+Happy quizzing with MathCMDer! 🎯
