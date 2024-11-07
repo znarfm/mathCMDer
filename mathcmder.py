@@ -258,7 +258,12 @@ def run_quiz(args: object) -> tuple:
 
 
 def save_score(
-    name: str, score: int, count: int, total_time: float, ave: float, db_name: str = "leaderboard.db"
+    name: str,
+    score: int,
+    count: int,
+    total_time: float,
+    ave: float,
+    db_name: str = "leaderboard.db",
 ) -> None:
     """
     Save the score of a player in the leaderboard.
