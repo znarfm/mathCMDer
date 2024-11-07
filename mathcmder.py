@@ -25,7 +25,15 @@ def main():
         # Start the quiz
         score, total_time, time_list = run_quiz(args)
         # End the quiz
-        endgame(args.opt_out, args.name, score, args.count, args.operation, total_time, time_list)
+        endgame(
+            args.opt_out,
+            args.name,
+            score,
+            args.count,
+            args.operation,
+            total_time,
+            time_list,
+        )
     elif args.command == "leaderboard":
         # Show the leaderboard
         read_leaderboard(args)
@@ -292,7 +300,13 @@ def save_score(
 
 
 def endgame(
-    opt_out: bool, name: str, score: int, count: int, operation: str, total_time: float, time_list: list
+    opt_out: bool,
+    name: str,
+    score: int,
+    count: int,
+    operation: str,
+    total_time: float,
+    time_list: list,
 ) -> None:
     """
     Prints the endgame message with the player's score, total time, and average time per question, and saves the score to a file.
